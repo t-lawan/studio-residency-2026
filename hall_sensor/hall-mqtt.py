@@ -9,8 +9,8 @@ from umqtt.simple import MQTTClient
 ESP_ID = 1  # unique name for this device
 
 # --- WiFi setup ---
-WIFI_SSID = "YOUR_WIFI_SSID"
-WIFI_PASSWORD = "YOUR_WIFI_PASSWORD"
+WIFI_SSID = "THE_SUN"
+WIFI_PASSWORD = "THE_SUN2046"
 
 # --- MQTT setup ---
 MQTT_BROKER = "192.168.1.100"     # your broker's IP or hostname
@@ -36,7 +36,7 @@ connect_wifi()
 mqtt_client = connect_mqtt()
 
 # --- Sensor setup ---
-digital_pin = Pin(2, Pin.IN, Pin.PULL_UP)
+digital_pin = Pin(26, Pin.IN, Pin.PULL_UP)
 
 last_trigger = ticks_ms()
 intervals = []
