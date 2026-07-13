@@ -1,7 +1,7 @@
 from machine import Pin
 from time import ticks_ms, ticks_diff, sleep
 
-digital_pin = Pin(2, Pin.IN, Pin.PULL_UP)  # explicit pull-up in case it's needed
+digital_pin = Pin(26, Pin.IN, Pin.PULL_UP)  # explicit pull-up in case it's needed
 
 last_trigger = ticks_ms()
 intervals = []
