@@ -1,19 +1,33 @@
 import paho.mqtt.client as mqtt
+from paho.mqtt.enums import CallbackAPIVersion
+from datetime import datetime
+import json
 
-BROKER_HOST = "localhost"  # running on the same Pi as the broker
+BROKER_HOST = "localhost"
 BROKER_PORT = 1883
 
-def on_connect(client, userdata, flags, rc, properties=None):
-    if rc == 0:
+def on_connect(client, userdata, flags, reason_code, properties):
+    if reason_code == 0:
         print("Connected to broker")
-        client.subscribe("#")  # "#" = subscribe to every topic
+        print(f"Flags: {flags}")
+        if properties is not None:
+            print(f"Properties: {properties.json()}")
+        client.subscribe("#")
     else:
-        print("Connection failed, code:", rc)
+        print("Connection failed, reason code:", reason_code)
 
 def on_message(client, userdata, msg):
-    print(f"[{msg.topic}] {msg.payload.decode()}")
+    timestamp = datetime.now().strftime("%H:%M:%S")
+    try:
+        payload = msg.payload.decode()
+    except UnicodeDecodeError:
+        payload = f"<binary, {len(msg.payload)} bytes>"
 
-client = mqtt.Client()
+    client_id = client._client_id.decode() if client._client_id else "unknown"
+
+    print(f"[{timestamp}] client_id={client_id} userdata={userdata} | {msg.topic} => {payload}")
+
+client = mqtt.Client(CallbackAPIVersion.VERSION2)
 client.on_connect = on_connect
 client.on_message = on_message
 

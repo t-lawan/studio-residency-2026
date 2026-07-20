@@ -13,27 +13,9 @@ WIFI_SSID = "THE_SUN"
 WIFI_PASSWORD = "THE_SUN2046"
 
 # --- MQTT setup ---
-MQTT_BROKER = "192.168.1.100"     # your broker's IP or hostname
-MQTT_CLIENT_ID = f"HALL_SENSOR_{ESP_ID}"   # unique per device if you deploy several
-MQTT_TOPIC = b"wind/oscillations"  # topic to publish to
-
-def connect_wifi():
-    sta = network.WLAN(network.STA_IF)
-    sta.active(True)
-    if not sta.isconnected():
-        sta.connect(WIFI_SSID, WIFI_PASSWORD)
-        while not sta.isconnected():
-            sleep(0.5)
-    print("WiFi connected:", sta.ifconfig())
-
-def connect_mqtt():
-    client = MQTTClient(MQTT_CLIENT_ID, MQTT_BROKER)
-    client.connect()
-    print("MQTT connected")
-    return client
-
-connect_wifi()
-mqtt_client = connect_mqtt()
+MQTT_BROKER = "192.168.0.100"     # your broker's IP or hostname
+MQTT_CLIENT_ID = f"ESP32_SENSOR_{ESP_ID}"   # unique per device if you deploy several
+MQTT_TOPIC = b"wind/oscillations/1"  # topic to publish to
 
 # --- Sensor setup ---
 digital_pin = Pin(26, Pin.IN, Pin.PULL_UP)
@@ -56,6 +38,27 @@ digital_pin.irq(trigger=Pin.IRQ_FALLING, handler=magnet_detected)
 
 last_publish = ticks_ms()
 publish_interval_ms = 1000  # send an update once per second
+
+# --- Wifi and MQTT setup ---
+
+def connect_wifi():
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    if not wlan.isconnected():
+        wlan.connect(WIFI_SSID, WIFI_PASSWORD)
+        while not wlan.isconnected():
+            sleep(0.5)
+    print("WiFi connected:", wlan.ifconfig())
+
+def connect_mqtt():
+    client = MQTTClient(MQTT_CLIENT_ID, MQTT_BROKER)
+    client.connect()
+    print("MQTT connected")
+    return client
+
+# --- Main ---
+connect_wifi()
+mqtt_client = connect_mqtt()
 
 while True:
     if trigger_flag:
