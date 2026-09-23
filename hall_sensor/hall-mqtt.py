@@ -15,7 +15,7 @@ WIFI_PASSWORD = "THE_SUN2046"
 # --- MQTT setup ---
 MQTT_BROKER = "192.168.0.100"     # your broker's IP or hostname
 MQTT_CLIENT_ID = f"ESP32_SENSOR_{ESP_ID}"   # unique per device if you deploy several
-MQTT_TOPIC = b"wind/oscillations/1"  # topic to publish to
+MQTT_TOPIC = b"wind/oscillation"  # topic to publish to
 
 # --- Sensor setup ---
 digital_pin = Pin(26, Pin.IN, Pin.PULL_UP)
